@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.auth import Auth
 from data.datamaker import DataMaker
-from utils import pages
+from components import pages
 from utils import constants as c
 from utils import helpers
 from exceptions.exceptions import AuthException

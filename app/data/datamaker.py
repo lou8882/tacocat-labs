@@ -12,8 +12,8 @@ class DataMaker():
     def __init__(self, auth: Auth):
         self.auth: Auth = auth
         self.years: dict = {}
-        self.athlete = None
-        self.gear = None
+        self.athlete: pd.DataFrame = None
+        self.gear: pd.DataFrame = None
 
 
     def fetch_athelete_data(self) -> None:
@@ -39,7 +39,6 @@ class DataMaker():
                 page += 1
                 params = {'after':timestamps[0],'before':timestamps[1],'per_page':100,'page':page}
 
-
         ################
                 r = requests.get(self.activities_url, params=params, headers=self.auth_headers)
                 r.raise_for_status()
@@ -47,16 +46,22 @@ class DataMaker():
 
                 df_2 = pd.DataFrame(r.json())
 
-
                 df_2 = df_2.merge(df_gear, on='gear_id', suffixes=('','_y'), how="left")
-                # print(df_2.head(2))
-
                 df_2 = transformers.transform_activity(df_2)
 
                 df = pd.concat([df, df_2], ignore_index=True)
                 res_len = len(df_2) 
         
             self.years[year] = df
+            print(f'\n\n{self.years[year]}\n\n')
+
+    def get_line_chart_df(self, year:int, y_axis:str) -> pd.DataFrame:
+        df = self.years[year]
+        df = df[["start_date_local",y_axis]]
+        df.sort_values(by="start_date_local",inplace=True)
+        df[y_axis] = df[y_axis].cumsum()
+        print(df)
+        return df
 
     @property
     def activities_url(self) -> str:

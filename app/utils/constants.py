@@ -9,7 +9,10 @@ sadbear_image_url = "http://1.bp.blogspot.com/_EWGdhFZYNDA/TIUpewCuKAI/AAAAAAAAA
 home = 'home'
 welcome = 'welcome'
 invalid_permissions = 'invalid_permissions'
+table_maker = 'buid_table'
 table = 'table'
+line_maker = 'line_maker'
+line = 'line'
 
 # summary fields
 athlete_summary_fields = {

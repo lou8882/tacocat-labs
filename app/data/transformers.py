@@ -44,5 +44,5 @@ def transform_activity(df: pd.DataFrame) -> pd.DataFrame:
         df[col] = units.unit_convert(df, col)
     
     # rename columns for readability
-    df = df.rename(columns=c.activities_fields)
+    # df = df.rename(columns=c.activities_fields)
     return df

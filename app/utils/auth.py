@@ -3,8 +3,7 @@ import os
 import requests
 import json
 import time
-import streamlit as st
-from utils import constants, pages
+from utils import constants
 from exceptions.exceptions import AuthException
 
 class Auth():

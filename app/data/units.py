@@ -12,33 +12,33 @@ other_round_numbers = ['average_cadence','average_watts','kilojoules','average_h
 def unit_convert(df: pd.DataFrame, col: str) -> pd.DataFrame:
     if col in mps_to_mph:
         ret = df[col].fillna(0)
-        ret = ret.astype(int)
         ret = ret * 2.23694
-        ret = ret.round(2).apply(str)
-        return ret + " mph"
+        return ret.round(2)
+
     elif col in temp_cel_to_fh:
         ret = df[col].fillna(0)
         ret = ret * 1.8 + 32
-        ret = ret.astype(int).apply(str)
-        return ret + "f"
+        return ret.astype(int)
+
     elif col in meters_to_feet:
         ret = df[col].fillna(0)
         ret = ret * 3.28084
-        ret = ret.astype(int).apply(str)
-        return ret + 'ft'
+        return ret.astype(int)
+
     elif col in meters_to_miles:
         ret = df[col].fillna(0)
         ret = ret.astype(int)
         ret = ret / 1609.34
-        ret = ret.round(2).apply(str)
-        return ret + " mi"
+        return ret.round(2)
+
     elif col in seconds_to_hhmm:
         ret = pd.to_timedelta(df[col],unit='s')
-        ret = [time_hhmmss_format(x) for x in ret]
-        return ret
+        return [time_hhmmss_format(x) for x in ret]
+
     elif col in datetime_to_mmddyyhhmm:
-        ret = pd.to_datetime(df[col],format="%Y-%m-%dT%H:%M:%SZ").dt.strftime('%b %d, %Y %I:%M%p')
-        return ret
+        # return pd.to_datetime(df[col],format="%Y-%m-%dT%H:%M:%SZ").dt.strftime('%b %d, %Y %I:%M%p')
+        return pd.to_datetime(df[col],format="%Y-%m-%dT%H:%M:%SZ")
+
     elif col in other_round_numbers:
         ret = df[col].fillna(0)
         return ret.astype(int)
