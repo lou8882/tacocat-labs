@@ -22,7 +22,7 @@ class Auth():
 
     def set_auth_url(self):
         if os.getenv('HOSTED_BY') == 'heroku':
-            return f"http://www.strava.com/oauth/authorize?client_id={self.client_id}&response_type=code&redirect_uri=http://nrlewis.herokuapp.com/&scope=activity:read_all,profile:read_all"
+            return f"http://www.strava.com/oauth/authorize?client_id={self.client_id}&response_type=code&redirect_uri=https://tacocat-labs.herokuapp.com/&scope=activity:read_all,profile:read_all"
         else:
             return f"http://www.strava.com/oauth/authorize?client_id={self.client_id}&response_type=code&redirect_uri=http://localhost:8501/&scope=activity:read_all,profile:read_all"
 

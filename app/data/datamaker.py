@@ -6,7 +6,7 @@ import pandas as pd
 from utils.auth import Auth
 from utils import constants as c
 from utils import time
-from data import transformers, mock
+from data import transformers
 
 class DataMaker():
     def __init__(self, auth: Auth):
