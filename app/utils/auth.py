@@ -27,7 +27,6 @@ class Auth():
 
 
     def login(self, params: dict):
-        # print("auth_login")
         expires = self.expires_at
         if expires:
             now = time.time()
@@ -41,14 +40,12 @@ class Auth():
             "grant_type":"authorization_code",
             "code":self.code}
         
-        # print(f"auth login params: {myparams}")
         r = requests.post("https://www.strava.com/oauth/token",params=myparams)
         dct = json.loads(r.text)
 
         if 'errors' in dct:
             raise AuthException(dct['errors'])
         
-        # print(f"login dct: {dct}")
         self.refresh_token: str = dct['refresh_token']
         self.access_token: str = dct['access_token']
         self.athlete: dict = dct['athlete']
@@ -61,14 +58,12 @@ class Auth():
             "grant_type":"refresh_token",
             "code":self.refresh_token}
 
-        print(f"auth refresh params: {myparams}")
         r = requests.post("https://www.strava.com/oauth/token",params=myparams)
         dct = json.loads(r.text)
 
         if dct['errors']:
             raise Exception(dct['errors'])
 
-        print(f"refrsh dct: {dct}")
         self.access_token: str = dct['access_token']
         self.expires_at: int = dct['expires_at']
 

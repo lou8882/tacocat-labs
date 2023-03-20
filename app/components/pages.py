@@ -40,7 +40,7 @@ def error_page(error):
 
 def table_maker_page():
     session.sidebar = buttons.sidebar()
-    print(session.auth.access_token)
+    # print(session.auth.access_token)
 
     st.image(session.auth.athlete["profile"])
     st.title(f"Table maker for {session.auth.athlete['firstname']}")
