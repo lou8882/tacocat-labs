@@ -1,12 +1,13 @@
 import requests
 import json
+import time
 
 import pandas as pd
 
 from utils.auth import Auth
 from utils import constants as c
-from utils import time
-from data import transformers
+from utils import time as timeutil
+from data import transformers, mock
 
 class DataMaker():
     def __init__(self, auth: Auth):
@@ -26,10 +27,16 @@ class DataMaker():
 
         self.athlete = pd.DataFrame(r.json())
         self.gear = pd.DataFrame(r.json()['bikes'])
+        start_year = timeutil.datestr_to_date(r.json()["created_at"]).tm_year
+        cur_year = time.gmtime(time.time()).tm_year
+        for year in range(start_year,cur_year+1):
+            self.years[year] = {}
+
+
     
     def fetch_activity_data(self, year: float):
-        if year not in self.years:
-            timestamps = time.get_year_epochs(year)
+        if len(self.years[year]) == 0:
+            timestamps = timeutil.get_year_epochs(year)
             page = 0 
             res_len = 100
 
@@ -53,14 +60,12 @@ class DataMaker():
                 res_len = len(df_2) 
         
             self.years[year] = df
-            print(f'\n\n{self.years[year]}\n\n')
 
     def get_line_chart_df(self, year:int, y_axis:str) -> pd.DataFrame:
         df = self.years[year]
         df = df[["start_date_local",y_axis]]
         df.sort_values(by="start_date_local",inplace=True)
         df[y_axis] = df[y_axis].cumsum()
-        print(df)
         return df
 
     @property

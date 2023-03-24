@@ -40,12 +40,14 @@ def error_page(error):
 
 def table_maker_page():
     session.sidebar = buttons.sidebar()
-    # print(session.auth.access_token)
 
     st.image(session.auth.athlete["profile"])
     st.title(f"Table maker for {session.auth.athlete['firstname']}")
 
-    session.year_selector = st.selectbox(label="year selector",options=[2023,2022,2021,2020])
+    # opts = [y for y in session.datamaker.years.keys()]
+    # opts.sort(reverse=True)
+    opts = sorted(session.datamaker.years.keys(), reverse=True)
+    session.year_selector = st.selectbox(label="year selector",options=opts)
     buttons.create_table_button()
 
 
@@ -63,7 +65,10 @@ def line_maker_page():
     session.sidebar = buttons.sidebar()
     st.image(session.auth.athlete["profile"])
     st.title(f"Line Chart Maker for {session.auth.athlete['firstname']}")
-    session.year_selector = st.selectbox(label="year selector",options=[2023,2022,2021])
+
+    # fill year selector dropdown with all years since user has created acct
+    opts = sorted(session.datamaker.years.keys(), reverse=True)
+    session.year_selector = st.selectbox(label="year selector",options=opts)
     # session.stat_selector = st.selectbox(label="stat selector", options=["distance","elapsed_time"])
     session.stat_selector = "distance"
     buttons.create_line_button()
@@ -72,7 +77,7 @@ def line_page():
     session.sidebar = buttons.sidebar()
     st.image(session.auth.athlete["profile"])
     st.title(f"Results {str(session.year_selector)}")
-    # df = session.datamaker.years[session.year_selector]
+
     df = session.datamaker.get_line_chart_df(session.year_selector, session.stat_selector)
     df = df.rename(columns=c.activities_fields)
     chart = alt.Chart(df).mark_line().encode(x=f'{c.activities_fields["start_date_local"]}:T',y=f'{c.activities_fields[session.stat_selector]}:Q')

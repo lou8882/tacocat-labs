@@ -37,12 +37,10 @@ def transform_gear_summary(df_gear: pd.DataFrame) -> pd.DataFrame:
 def transform_activity(df: pd.DataFrame) -> pd.DataFrame:
     
     # filter down columns
-    df = df[c.activities_fields.keys()]
+    for col, _ in df.iteritems():
+        if col not in c.activities_fields:
+            df = df.drop([col], axis=1)
+        else:
+            df[col] = units.unit_convert(df, col)
 
-    # convert units for readability
-    for col in c.activities_fields.keys():
-        df[col] = units.unit_convert(df, col)
-    
-    # rename columns for readability
-    # df = df.rename(columns=c.activities_fields)
     return df

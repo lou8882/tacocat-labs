@@ -28,7 +28,8 @@ elif url_params["scope"][0] != "read,activity:read_all,profile:read_all": # user
 elif url_params: # post auth
     try: 
         st.session_state.auth.login(url_params)
-        st.session_state.datamaker.fetch_athelete_data()
+        if st.session_state.datamaker.years == {}:
+            st.session_state.datamaker.fetch_athelete_data()
         # st.session_state
         if 'page' not in st.session_state:
             site_pages[c.home]() # landing page
