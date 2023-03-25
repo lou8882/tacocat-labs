@@ -9,7 +9,7 @@ from utils import constants as c
 from utils import time as timeutil
 from data import transformers
 from mockdata.mock import Mock
-from mockdata.mockactivity import mock_activities_data
+from mockdata.mockactivity import mock_activities_data_2023
 from mockdata.mockathlete import mock_athlete_data
 
 class DataMaker():
@@ -40,7 +40,7 @@ class DataMaker():
     def fetch_activity_data(self, years: list[float]):
         for year in years:
             if len(self.years[year]) == 0:
-                print(f'fetch_activity_data: {year}')
+                # print(f'fetch_activity_data: {year}')
                 timestamps = timeutil.get_year_epochs(year)
                 page = 0 
                 res_len = 100
@@ -75,7 +75,7 @@ class DataMaker():
             df_2[y_axis] = df_2[y_axis].cumsum()
             df_2.insert(0,"year",year)
             df = pd.concat([df,df_2], ignore_index=True)
-        print(df)
+        # print(df)
         return df
 
     @property
