@@ -21,7 +21,7 @@ def create_table_button():
     return st.button("Create Table Now", on_click=create_table)
 
 def create_table():
-    session.datamaker.fetch_activity_data(session.year_selector)
+    session.datamaker.fetch_activity_data([session.year_selector])
     session.page = c.table
 
 ###### Line Charts

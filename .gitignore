@@ -2,4 +2,5 @@ run.sh
 .vscode
 venv
 .env
-mock.py
+mockdata
+*.ipynb

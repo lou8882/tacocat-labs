@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit import session_state as session
 import altair as alt
+import pandas as pd
 
 from utils import auth
 from utils import constants as c
@@ -68,7 +69,7 @@ def line_maker_page():
 
     # fill year selector dropdown with all years since user has created acct
     opts = sorted(session.datamaker.years.keys(), reverse=True)
-    session.year_selector = st.selectbox(label="year selector",options=opts)
+    session.year_selector = st.multiselect(label="year selector",options=opts)
     # session.stat_selector = st.selectbox(label="stat selector", options=["distance","elapsed_time"])
     session.stat_selector = "distance"
     buttons.create_line_button()
@@ -81,9 +82,39 @@ def line_page():
     df = session.datamaker.get_line_chart_df(session.year_selector, session.stat_selector)
     df = df.rename(columns=c.activities_fields)
     chart = alt.Chart(df).mark_line().encode(x=f'{c.activities_fields["start_date_local"]}:T',y=f'{c.activities_fields[session.stat_selector]}:Q')
+    # chart = alt_chart(df)
     st.altair_chart(chart, use_container_width=True)
 
 
     # st.dataframe(df,use_container_width=True)
     buttons.home_button()
     buttons.line_maker_button("Back to Line Chart Maker")
+
+#####
+
+def alt_chart(df: pd.DataFrame): 
+
+# chart made based on code found here
+# https://altair-viz.github.io/gallery/line_chart_with_custom_legend.html
+
+    base =  alt.Chart(df).encode(
+        color=alt.Color(c.activities_fields["start_date_local"], legend=None)
+    ).properties(width=500)
+
+    line = base.mark_line().encode(x=c.activities_fields["start_date_local"],y='distance')
+
+    last_date = base.mark_circle().encode(
+        x=alt.X("last_date['activity date']:T"),
+        y=alt.Y("last_date['distance']:Q")
+    ).transform_aggregate(
+        last_date="argmax(activity date)",
+        groupby=["year"]
+    )
+
+    year = last_date.mark_text(align="left", dx=4).encode(text='year')
+
+    chart = (line + last_date + year).encode(
+        x=alt.X(title="date"),
+        y=alt.Y(title="miles")
+    )
+    return chart
